@@ -1,8 +1,8 @@
 
 LDFLAGS = -shared
 TARGET = libmy.so
-CSOURCES = $(shell echo *.c)
-SSOURCES = $(shell echo *.S)
+CSOURCES = $(wildcard *.c)
+SSOURCES = $(wildcard *.S)
 
 OBJECTS = $(CSOURCES:.c=_c.o)
 OBJECTS += $(SSOURCES:.S=_s.o)
