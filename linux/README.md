@@ -17,7 +17,7 @@
 
 ## Endianess
 * little endian was used in the past for architectural reasons, now it continued as a legacy i.e. **x86** from Intel and **PowerPC**
-* big endian is more logical as if the data 0x12345678 needs to be written to memory (0xa 0xa+1 0xa+2 0xa+3), then this is 1 to 1 mapping, LSB 0x78 will be written to address highest address i.e. 0xa+3, it is used in **ARM**
+* big endian is more logical as if the data `0x12345678` needs to be written to memory (0xa 0xa+1 0xa+2 0xa+3), then this is 1 to 1 mapping, LSB 0x78 will be written to address highest address i.e. 0xa+3, it is used in **ARM**
 
 ## Process states
 * Created
@@ -36,15 +36,15 @@
 * memory mapped: advantage is to use the same instructions for accessing memory with the I/O devices
 * port mapped: a special decoder is used for the port address lines to decode which device is selected, the other address lines are mapped to the memory, i.e. if the address size is 16-bit, then 2 bits can be reserved for I/O and 14 bits for the memory.
 
-## Queues:
+## Queues
 There is a queue for each resource, and the scheduler decides from which queue it will pick up. Queues contain the PCB.
 
-## Scheduler:
-1. Short Term Scheduler
+## Scheduler
+1. Short Term Scheduler:
 Picks up a queued process from Ready state to the Running state.
-2. Medium Term Scheduler
+2. Medium Term Scheduler:
 In case that all the resources are occupied and a process need to be run, then OS uses a space in the secondary memory (called swap in Linux and pagefile.sys in Windows) to move some process and clean up the memory for the new process, moved process can be brought back to memory to continue execution afterwards.
-3. Long Term Scheduler
+3. Long Term Scheduler:
 Picks up  a process which is not yet queued and add it to the Ready state queue. LTS shall mix between the selected processes so some are processor bounded and some are resources bounded.
 
 ## Commands
@@ -78,7 +78,7 @@ Setting the assigned memory limit for coredump to unlimited
 Compress a file and keep original
 `bzip2 -k <file>`
 
-`malloc()` uses:
+### `malloc()` uses:
 1. `brk()` for small memory allocation in a single contiguous chunk of virtual address space.
 2. `mmap()` for big memory allocation into the heap in independent regions of memory.
 3. `free()` does not use `munmap()` as `free()` is a standard library c function that doesn't need to deallocate the memory from kernel, it is enough that it marks this address to be reusable in the scope of the c application.
