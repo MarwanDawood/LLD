@@ -6,3 +6,4 @@
 ## Known issues
 * The shell handles only first command, then it throws always ann error that command was not found.
 * It parses the command argument but they are not executed, i.e. `ls -l` is accepted, but the output is the result of `ls` only.
+* Code for https://www.youtube.com/playlist?list=PLOBLIyu46FvPlBaAdPrzLqOx6O5rowI9I
