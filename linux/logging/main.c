@@ -19,7 +19,8 @@ void do_something(logger *log) {
     }
 }
 
-int main() {
+static void console_log_sample(void)
+{
     //
     //console log sample
     //
@@ -39,14 +40,12 @@ int main() {
     //macro usage
     ILOG(&conlog, "Info message 3");
     ELOG(&conlog, "Error message 3");
+}
 
+static void file_log_sample(logger f1, logger f2) {
     //
     //file log samples
     //
-
-    //first setup 2 separate log files.
-    logger f1;
-    logger f2;
 
     //create the loggers...
     filelog_create(&f1, "file1.log");
@@ -70,8 +69,17 @@ int main() {
 
     flog1->close(&f1);
     flog2->close(&f2);
+}
 
-    do_something(&f1);
+int main() {
+    console_log_sample();
+    
+    //first setup 2 separate log files.
+    logger f1;
+    logger f2;
+    file_log_sample(f1, f2);
+
+    //do_something(&f1);
 
     return 0;
 }
