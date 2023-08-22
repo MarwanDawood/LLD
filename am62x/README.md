@@ -17,12 +17,9 @@ https://interrupt.memfault.com/blog/arm-cortex-m-exceptions-and-nvic
 
 # AM62x Sitara Kernel Preparation
 ## Install AM62x SDK
-`sudo apt update`
-
-`sudo apt install build-essential bison flex libssl-dev libncurses-dev u-boot-tools`
-
-`chmod +x ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin`
-
+`sudo apt update`\
+`sudo apt install build-essential bison flex libssl-dev libncurses-dev u-boot-tools`\
+`chmod +x ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin`\
 `./ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin`
 
 ## References
@@ -33,36 +30,28 @@ https://interrupt.memfault.com/blog/arm-cortex-m-exceptions-and-nvic
 * Read more [Linux userspace graphics](./kocialkowski-overview-linux-userspace-graphics-stack.pdf)
 
 # Compiling Linux Kernel
-To read total folder content size
-
+To read total folder content size\
 `du -sch`
 
-Generate full patch
-
+Generate full patch\
 `git format-patch -1 --pretty=fuller <path-id>`
 
 ## Cloning
-Clone Kernel Git to linux_mainline folder
-
+Clone Kernel Git to linux_mainline folder\
 `git clone https://github.com/torvalds/linux.git linux_mainline`
 
-Install dependencies
-
+Install dependencies\
 `sudo apt-get install cscope libncurses5-dev libssl-dev bison flex git-email`
 
-Clone stable Kernel Git to linux_stable folder
-
+Clone stable Kernel Git to linux_stable folder\
 `git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux_stable`
 
-Checkout latest branch version
-
-`git br -a |grep linux-5`
-
+Checkout latest branch version\
+`git br -a |grep linux-5`\
 `git co linux-5.19.y`
 
 ## Configuration
-Copy configuration file of current Kernel from `/boot`
-
+Copy configuration file of current Kernel from `/boot` :\
 `cp /boot/config-5.4.0-150-generic .config`
 
 * to generate config based on old one `make oldconfig`
@@ -76,77 +65,65 @@ Edit the config file by removing the assigned value to `CONFIG_SYSTEM_TRUSTED_KE
 * To compile all `make -j $(nproc) all`
 * To compile only changed files `make -j $(nproc)`
 
-Once Kernel compilation is complete, install the new Kerne, the below command will run `update-grub` to add the new Kernel to the grub menu
+Once Kernel compilation is complete, install the new Kerne, the below command will run `update-grub` to add the new Kernel to the grub menu.
 
-Login as super user
-
+Login as super user\
 `sudo -i`
 
-Build modules and install them afterwards
+Build modules and install them afterwards\
 `sudo make modules_install install`
 
 Notes:
 * If signing modules fails due to unsupported feature from hardware, disable security for modules signing by running `make menuconfig`, then enter the option `Enable loadable kernel module` then under `Module Signature verification`, uncheck `Automatically sign all modules`
-* Another way is to setup certificates manually by running below command, then adjusting **.config** file with the next below parameters:
+* Another way is to setup certificates manually by running below command:
+    `openssl req -x509 -newkey rsa:4096 -keyout certs/mycert.pem -out certs/mycert.pem -nodes -days 3650`
 
-`openssl req -x509 -newkey rsa:4096 -keyout certs/mycert.pem -out certs/mycert.pem -nodes -days 3650`
+    then adjusting **.config** file with the below parameters:\
+    `CONFIG_MODULE_SIG_KEY="certs/mycert.pem"`\
+    `CONFIG_SYSTEM_TRUSTED_KEYRING=y`\
+    `CONFIG_SYSTEM_TRUSTED_KEYS="certs/mycert.pem"`
 
-`CONFIG_MODULE_SIG_KEY="certs/mycert.pem"`
-`CONFIG_SYSTEM_TRUSTED_KEYRING=y`
-`CONFIG_SYSTEM_TRUSTED_KEYS="certs/mycert.pem"`
+* if not installed, install it using\
+`sudo apt-get install mokutil`
 
-if not installed, install it using `sudo apt-get install mokutil`
-
-Using the option `-t` allows to generate dmesg logs without timestamp
-
+Using the option `-t` allows to generate dmesg logs without timestamp\
 `dmesg -t > dmesg_current`
 `dmesg -t -k > dmesg_kernel`
 `dmesg -t -l <emerg|alert|crit|err|warn|info> > dmesg_current_xx`
 
 ## Booting the Kernel
-Comment out `GRUB_TIMEOUT_STYLE=hidden` and change `GRUB_TIMEOUT` value to 5
-
-`sudo vim /etc/default/grub`
-
+Comment out `GRUB_TIMEOUT_STYLE=hidden` and change `GRUB_TIMEOUT` value to 5\
+`sudo vim /etc/default/grub`\
 `sudo cp arch/x86/boot/bzImage /boot/`
 
-Update the grub configuration, it will locate any new kernel images in \boot\
-
+Update the grub configuration, it will locate any new kernel images in `\boot\`:\
 `sudo update-grub`
 
 ## Patch preparation
-To know who you should send the patch to, run this script
-
+To know who you should send the patch to, run this script\
 `scripts/get_maintainer.pl <changed-file>`
 
-To check if code changes are complying with Linux Kernel coding style, run
-
+To check if code changes are complying with Linux Kernel coding style, run\
 `checkpatch.pl <changed-file>`
 
-To add all files and create commit message
-
+To add all files and create commit message\
 `git commit -a`
 
-To create a formatted patch
-
+To create a formatted patch\
 `git format-patch -1 HEAD --to=<email> --cc=<email>`
 
-To send the email, first you need to setup smtp fields in `.gitconfig`, for smtppass, if 2-steps verifications is enabled, you can create **App Password** from Google Account, and add it in that file
-
+To send the email, first you need to setup smtp fields in `.gitconfig`, for smtppass, if 2-steps verifications is enabled, you can create **App Password** from Google Account, and add it in that file\
 `git send-email 0001-add-print-log.patch`
 
-Git doesn't know about changed files and will see them as untracked
+Git doesn't know about changed files and will see them as untracked\
 `patch -p1 < file.patch`
 
-To remove untracked files, run both below
-
-`git clean -dfx`
-
+To remove untracked files, run both below\
+`git clean -dfx`\
 `git reset --hard`
 
-Git will be aware of changed files
-`git apply --index file.patch`
-
+Git will be aware of changed files\
+`git apply --index file.patch`\
 `git diff`
 
 ## Driver Dependency
