@@ -6,8 +6,8 @@ Create QEMU image and mount it by running the below script\
 
 ## Run OS in VM
 * install VirtualBox from Oracle
-* install Ubuntu 18.04 with 20GB disk size
-* create 1 virtual hard disk in virtualbox and add it to Ubuntu machine
+* install Kali Linux 10GB disk size
+* create 1 virtual hard disk in virtualbox and add it to x64 Kali machine
 * restart your virtual machine.
 * run `lsblk` to see that changes took effect
 * change user to super user, `sudo su`
@@ -29,13 +29,15 @@ Create QEMU image and mount it by running the below script\
 * copy the initial RAM disk from current machine, `cp /boot/initrd.img-5.10.0-kali7-amd64 .`
 * copy the machine kernel from current machine as a temporary solution, `cp /boot/vmlinuz-5.10.0-kali7-amd64 .`
 * `grub-install /dev/sdb --skip-fs-prob --boot-directory=/mnt/myos/boot` to install grub in the boot directory
-* create this config file, `vim grub/grub.cfg` and add the following
+* create this config file, `vim grub/grub.cfg` and add the following:
+```
     set default=0
     set timeout=30
     menuentry "myOs 0.0.1" {
-        linux /boot/vmlinuz-5.10.0-kali7-amd64 root=/dev/sdb1 ro
+        linux /boot/vmlinuz-5.10.0-kali7-amd64 root=/dev/sda1 ro
         initrd /boot/initrd.img-5.10.0-kali7-amd6
     }
+```
 
 ### Create startup code
 * add the source files into /mnt/myos/src

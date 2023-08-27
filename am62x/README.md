@@ -17,10 +17,12 @@ https://interrupt.memfault.com/blog/arm-cortex-m-exceptions-and-nvic
 
 # AM62x Sitara Kernel Preparation
 ## Install AM62x SDK
-`sudo apt update`\
-`sudo apt install build-essential bison flex libssl-dev libncurses-dev u-boot-tools`\
-`chmod +x ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin`\
-`./ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin`
+```
+sudo apt update
+sudo apt install build-essential bison flex libssl-dev libncurses-dev u-boot-tools
+chmod +x ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin
+./ti-processor-sdk-linux-am62xx-evm-08.06.00.42-Linux-x86-Install.bin
+```
 
 ## References
 * Read more [AM62x datasheet](./AM62x%20Sitara%20Processors%20datasheet%20-%20am623.pdf)
@@ -47,8 +49,10 @@ Clone stable Kernel Git to linux_stable folder\
 `git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux_stable`
 
 Checkout latest branch version\
-`git br -a |grep linux-5`\
-`git co linux-5.19.y`
+```
+git br -a |grep linux-5
+git co linux-5.19.y
+```
 
 ## Configuration
 Copy configuration file of current Kernel from `/boot` :\
@@ -79,22 +83,28 @@ Notes:
     `openssl req -x509 -newkey rsa:4096 -keyout certs/mycert.pem -out certs/mycert.pem -nodes -days 3650`
 
     then adjusting **.config** file with the below parameters:\
-    `CONFIG_MODULE_SIG_KEY="certs/mycert.pem"`\
-    `CONFIG_SYSTEM_TRUSTED_KEYRING=y`\
-    `CONFIG_SYSTEM_TRUSTED_KEYS="certs/mycert.pem"`
+    ```
+    CONFIG_MODULE_SIG_KEY="certs/mycert.pem"
+    CONFIG_SYSTEM_TRUSTED_KEYRING=y
+    CONFIG_SYSTEM_TRUSTED_KEYS="certs/mycert.pem"
+    ```
 
 * if not installed, install it using\
 `sudo apt-get install mokutil`
 
 Using the option `-t` allows to generate dmesg logs without timestamp\
-`dmesg -t > dmesg_current`
-`dmesg -t -k > dmesg_kernel`
-`dmesg -t -l <emerg|alert|crit|err|warn|info> > dmesg_current_xx`
+```
+dmesg -t > dmesg_current
+dmesg -t -k > dmesg_kernel
+dmesg -t -l <emerg|alert|crit|err|warn|info> > dmesg_current_xx
+```
 
 ## Booting the Kernel
 Comment out `GRUB_TIMEOUT_STYLE=hidden` and change `GRUB_TIMEOUT` value to 5\
-`sudo vim /etc/default/grub`\
-`sudo cp arch/x86/boot/bzImage /boot/`
+```
+sudo vim /etc/default/grub
+sudo cp arch/x86/boot/bzImage /boot/
+```
 
 Update the grub configuration, it will locate any new kernel images in `\boot\`:\
 `sudo update-grub`
@@ -123,8 +133,10 @@ To remove untracked files, run both below\
 `git reset --hard`
 
 Git will be aware of changed files\
-`git apply --index file.patch`\
-`git diff`
+```
+git apply --index file.patch
+git diff
+```
 
 ## Driver Dependency
 The file `Kconfig` has the dependency information, as well as the driver possible types, tristate means:

@@ -1,11 +1,15 @@
 ## U-Boot Load Default dtb
-`ver`\
-`mmc rescan`
+```
+ver
+mmc rescan
+```
 
 bootargs can be read from linux using
 
-`$cat /proc/cmdline`\
-`env set bootargs console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 root=PARTUUID=c879998c-02 rw rootfstype=ext4 rootwait`
+```
+cat /proc/cmdline
+env set bootargs console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 root=PARTUUID=c879998c-02 rw rootfstype=ext4 rootwait
+```
 
 Show SD card content using `ls mmc 1:2 boot/`
 * MMC 0 is flash
@@ -13,9 +17,11 @@ Show SD card content using `ls mmc 1:2 boot/`
 * MMC 1:2 is SD card, root partition
 
 Load Kernel and dtb files:\
-`load mmc 1:2 0x82000000 boot/fitImage`\
-`iminfo`\
-`load mmc 1:2 0x88000000 boot/k3-am625-sk.dtb`
+```
+load mmc 1:2 0x82000000 boot/fitImage
+iminfo
+load mmc 1:2 0x88000000 boot/k3-am625-sk.dtb
+```
 
 Boot Kernel\
 `bootm $loadaddr - 0x88000000`
@@ -25,12 +31,16 @@ Optional: set env variable with default kernel image address\
 `env set $loaddtb 0x88000000`
 
 Load flattened device tree\
-`fdt addr 0x88000000`\
-`fdt list`
+```
+fdt addr 0x88000000
+fdt list
+```
 
 Change Kernel model and boot\
-`fdt set / model "Hello World!"`\
-`bootm 0x82000000 - 0x88000000`
+```
+fdt set / model "Hello World!"
+bootm 0x82000000 - 0x88000000
+```
 
 Check that Kernel model changed\
 `dmesg |grep Hello`
@@ -55,5 +65,7 @@ Make sure that python3.7 or above is installed
 https://cloudbytes.dev/snippets/upgrade-python-to-latest-version-on-ubuntu-linux
 
 Install following packages:\
-`sudo apt-get install python3-dev python3-setuptools uuid-dev libgnutls28-dev swig`\
-`make -j $(nproc)`
+```
+sudo apt-get install python3-dev python3-setuptools uuid-dev libgnutls28-dev swig
+make -j $(nproc)
+```
