@@ -44,3 +44,28 @@ Create QEMU image and mount it by running the below script\
 * add the source files `init.c` and `start.S` in this folder.
 * compile the src files using `gcc -nostdlib -ffreestanding -no-pie init.c start.S`
 * replace the binary file in sbin/init with the generated one `cp a.out ../sbin/init`
+### How ABI work for x64?
+```
+_syscall:
+    movq %rdi, %rax         /* Syscall number -> rax.  */
+    movq %rsi, %rdi         /* shift arg1 - arg5.  */
+    movq %rdx, %rsi
+    movq %rcx, %rdx
+    movq %r8, %r10
+    movq %r9, %r8
+    movq 8(%rsp),%r9        /* arg6 is on the stack.  */
+    syscall                 /* Do the system call.  */
+    cmpq $-4095, %rax       /* Check %rax for error.  */
+    jae SYSCALL_ERROR_LABEL /* Jump to error handler if error.  */
+    ret                     /* Return to caller.  */
+```
+#### 4.4.1 Calling a Function
+To call a function, the program should place the first six integer or pointer parameters in the
+6 registers <200b>%rdi<200b>, <200b>%rsi<200b>, <200b>%rdx<200b>, %rcx<200b>, <200b>%r8<200b>, and <200b>%r9<200b>; subsequent parameters (or parameters larger than 64 bits) should be pushed onto the stack, with the first argument topmost.
+
+#### 4.3 Register Usage
+By convention, <200b>%rax<200b> is used to store a function’s return value, if it exists and is no more than 64 bits long. Additionally,<200b> %rdi<200b>, %rsi<200b>, %rdx , %rcx, %r8<200b>, and %r9<200b> are used to pass the first 6 integer or pointer parameters to called functions. Additional parameters (or large parameters such as structs passed by value) are passed on the stack.
+
+#### why %r10 is used instead of %rcx?
+https://stackoverflow.com/questions/32253144/why-is-rcx-not-used-for-passing-parameters-to-system-calls-being-replaced-with
+wpZhsZ4oCdVe&XwpZhsZ4oCdVe&X
