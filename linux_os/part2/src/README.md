@@ -8,3 +8,4 @@
     * create the file `/mnt/myos/etc/ld.so.conf` with the content `/lib` on one line
     *  run `ldconfig -r /mnt/myos` to create cache file (`libmy.so` should be already in `/mnt/myos/lib` folder at the time)
 
+Note: the library name is **my**, hence the generated library file is named **libmy.so** and the linking in the makefile inside 'init' folder is named **-lmy**
